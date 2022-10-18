@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Identity;
 use Illuminate\Http\Request;
 
 class IdentityController extends Controller
@@ -13,7 +14,7 @@ class IdentityController extends Controller
      */
     public function index()
     {
-        //
+        return view('pages.dashboard.identity.index_identity');
     }
 
     /**
@@ -23,7 +24,7 @@ class IdentityController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.dashboard.identity.create_identity');
     }
 
     /**
@@ -34,7 +35,33 @@ class IdentityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'firstName' => 'required|max:30|string',
+            'lastName' => 'required|max:30|string',
+            'adress' => 'required|max:30|string',
+            'city' => 'required|max:30|string',
+            'zipCode' => 'required|digits:5',
+            'email' => 'required|email',
+            'phone' => 'required|digits:9',
+            'about' => 'required|',
+          ]);
+          
+        //   $validate_img = $request->file('url_img')->store('img');
+          Identity::create([
+            'first_name' => $request->firstName,
+            'last_name' => $request->lastName,
+            'adress' => $request->adress,
+            'city' => $request->city,
+            'zip_code' => $request->zipCode,
+            'phone' => '+33' . $request->phone,
+            'email' => $request->email,
+            'about' => $request->about,
+            'created_at' => now(),
+          ]);
+      
+          return redirect()
+            ->route('dashboard')
+            ->with('status', "Le film a bien été ajouté");
     }
 
     /**
