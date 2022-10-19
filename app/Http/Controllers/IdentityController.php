@@ -7,6 +7,18 @@ use Illuminate\Http\Request;
 
 class IdentityController extends Controller
 {
+
+    static public function sub_text($text, $length)
+    {
+        if (strlen($text) > $length) 
+        {
+            $text_length = strpos($text, ' ', $length);
+            $text_cut = substr($text, 0, $text_length) . '...';
+            return $text_cut;
+        }
+        return $text;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +26,8 @@ class IdentityController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard.identity.index_identity');
+        $identities = Identity::get()->all();
+        return view('pages.dashboard.identity.index', compact('identities'));
     }
 
     /**
@@ -24,7 +37,7 @@ class IdentityController extends Controller
      */
     public function create()
     {
-        return view('pages.dashboard.identity.create_identity');
+        return view('pages.dashboard.identity.create');
     }
 
     /**
@@ -44,10 +57,10 @@ class IdentityController extends Controller
             'email' => 'required|email',
             'phone' => 'required|digits:9',
             'about' => 'required|',
-          ]);
-          
+        ]);
+
         //   $validate_img = $request->file('url_img')->store('img');
-          Identity::create([
+        Identity::create([
             'first_name' => $request->firstName,
             'last_name' => $request->lastName,
             'adress' => $request->adress,
@@ -57,9 +70,9 @@ class IdentityController extends Controller
             'email' => $request->email,
             'about' => $request->about,
             'created_at' => now(),
-          ]);
-      
-          return redirect()
+        ]);
+
+        return redirect()
             ->route('dashboard')
             ->with('status', "Le film a bien été ajouté");
     }
@@ -81,9 +94,9 @@ class IdentityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Identity $identity)
     {
-        //
+        return view('pages.dashboard.identity.edit', compact($identity));
     }
 
     /**
