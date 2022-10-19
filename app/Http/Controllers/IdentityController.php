@@ -26,7 +26,7 @@ class IdentityController extends Controller
      */
     public function index()
     {
-        $identities = Identity::get()->all();
+        $identities = Identity::paginate(6);
         return view('pages.dashboard.identity.index', compact('identities'));
     }
 
@@ -66,7 +66,7 @@ class IdentityController extends Controller
             'adress' => $request->adress,
             'city' => $request->city,
             'zip_code' => $request->zipCode,
-            'phone' => '+33' . $request->phone,
+            'phone' => $request->phone,
             'email' => $request->email,
             'about' => $request->about,
             'created_at' => now(),
@@ -74,7 +74,7 @@ class IdentityController extends Controller
 
         return redirect()
             ->route('dashboard')
-            ->with('status', "Le film a bien été ajouté");
+            ->with('status', "La présentation a bien été ajoutée.");
     }
 
     /**
@@ -96,7 +96,7 @@ class IdentityController extends Controller
      */
     public function edit(Identity $identity)
     {
-        return view('pages.dashboard.identity.edit', compact($identity));
+        return view('pages.dashboard.identity.edit', compact('identity'));
     }
 
     /**
@@ -106,9 +106,35 @@ class IdentityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Identity $identity)
     {
-        //
+        $request->validate([
+            'firstName' => 'required|max:30|string',
+            'lastName' => 'required|max:30|string',
+            'adress' => 'required|max:30|string',
+            'city' => 'required|max:30|string',
+            'zipCode' => 'required|digits:5',
+            'email' => 'required|email',
+            'phone' => 'required|digits:9',
+            'about' => 'required',
+        ]);
+
+        //   $validate_img = $request->file('url_img')->store('img');
+        $identity->update([
+            'first_name' => $request->firstName,
+            'last_name' => $request->lastName,
+            'adress' => $request->adress,
+            'city' => $request->city,
+            'zip_code' => $request->zipCode,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'about' => $request->about,
+            'updated_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('identity.index')
+            ->with('status', "La présentation a bien été modifiée.");
     }
 
     /**
@@ -117,8 +143,11 @@ class IdentityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Identity $identity)
     {
-        //
+        $identity->delete();
+        return redirect()
+            ->route('identity.index')
+            ->with('status', "La présentation a bien été supprimée.");
     }
 }

@@ -10,8 +10,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form action="{{ route('identity.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <h2 class="text-xl font-bold text-gray-800">Créer votre carte d'identité</h2>
-                        <div class="p-10 border-b border-gray-200 flex">
+                        <div class="pb-10 border-b border-gray-200 flex">
                             <x-dashboard.input type='text' name='firstName' placeholder='Prénom :' /> 
                             <x-dashboard.input type='text' name='lastName' placeholder='Nom :' /> 
                         </div>
@@ -23,7 +22,7 @@
                             </div>
                         </div>
                         <div class="p-10 border-b border-gray-200">
-                            <x-dashboard.input type='email' name='email' placeholder='Email :' edit='panini' /> 
+                            <x-dashboard.input type='email' name='email' placeholder='Email :' /> 
                             <div class="">
                                 <div class="flex mt-3">
                                     <div class="bg-gray-500 py-4 px-5 rounded-l-xl text-white max-h-14">+33</div>
